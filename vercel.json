@@ -2,26 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/server.js",
+      "src": "./index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/auth(.*)",
-      "dest": "src/routes/authRoutes.js"
-    },
-    {
-      "src": "/cart(.*)",
-      "dest": "src/routes/cartRoutes.js"
-    },
-    {
-      "src": "/checkout(.*)",
-      "dest": "src/routes/orderRoutes.js"
-    },
-    {
-      "src": "/products(.*)",
-      "dest": "src/routes/productRoutes.js"
+      "src": "/(.*)",
+      "dest": "/"
     }
   ]
 }
