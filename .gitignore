@@ -1,0 +1,6 @@
+node_modules/
+jspm_packages/
+
+.npm
+.env
+config/serviceAccountKey/serviceAccountKey.json
