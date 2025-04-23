@@ -21,6 +21,17 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
-await connectDB();
 
-export default app;
+const startServer = async () => {
+  try {
+    await connectDB();
+    const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
+  } catch (error) {
+    console.error("Error starting server:", error);
+  }
+}
+
+export default startServer;

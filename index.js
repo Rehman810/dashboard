@@ -1,3 +1,3 @@
-import app from "./src/server.js";
+import startServer from "./src/server.js";
 
-export default app;
+startServer()
