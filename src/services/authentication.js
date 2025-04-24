@@ -6,46 +6,36 @@ import {
   loginValidation,
   createAdminValidation,
 } from "../validations/authValidation.js";
+import { generateCustomToken } from "../utils/generateToken.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 export const registerUser = async ({
   username,
   email,
   password,
-  confirmPassword,
-  phone,
-  profileImage,
 }) => {
   const { error } = registerValidation.validate({
     username,
     email,
     password,
-    confirmPassword,
-    phone,
-    profileImage,
   });
   if (error)
     throw new Error(error.details[0].message);
 
   const existingUser = await User.findOne({
-    $or: [{ email }, { phone }],
+    email,
   });
   if (existingUser)
-    throw new Error(
-      "Email or Phone number already registered."
-    );
+    throw new Error("Email already registered.");
 
-  const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(
     password,
-    salt
+    10
   );
-
   const user = new User({
     username,
     email,
     password: hashedPassword,
-    phone,
-    profileImage: profileImage || "",
   });
 
   await user.save();
@@ -77,7 +67,9 @@ export const loginUser = async (
   const token = jwt.sign(
     { id: user.id, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    {
+      expiresIn: "1h",
+    }
   );
 
   return { token, user };
@@ -109,12 +101,10 @@ export const createAdmin = async ({
   if (existingAdmin)
     throw new Error("Admin already exists!");
 
-  const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(
     password,
-    salt
+    10
   );
-
   const admin = new User({
     email,
     password: hashedPassword,
@@ -137,7 +127,10 @@ export const sendVerificationEmail = async (
   await sendEmail(
     email,
     "Verify Your Email",
-    `Click this link to verify your email: ${url}`
+    `<p>Hi,</p>
+     <p>Please verify your email by clicking the link below:</p>
+     <a href="${url}">${url}</a>
+     <p>This link will expire in 24 hours.</p>`
   );
 };
 
@@ -166,9 +159,7 @@ export const sendPasswordResetLink = async (
   email
 ) => {
   const user = await User.findOne({ email });
-  if (!user) {
-    throw new Error("User not found");
-  }
+  if (!user) throw new Error("User not found");
 
   const token = generateCustomToken(
     { id: user._id },
@@ -178,11 +169,11 @@ export const sendPasswordResetLink = async (
 
   await sendEmail(
     email,
-    "Verify Your Email",
+    "Reset Your Password",
     `<p>Hi,</p>
-     <p>Please verify your email by clicking the link below:</p>
+     <p>Click the link below to reset your password:</p>
      <a href="${url}">${url}</a>
-     <p>This link will expire in 24 hours.</p>`
+     <p>This link will expire in 15 minutes.</p>`
   );
 };
 

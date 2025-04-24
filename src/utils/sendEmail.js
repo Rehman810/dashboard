@@ -8,7 +8,11 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendEmail = async (to, subject, html) => {
+export const sendEmail = async (
+  to,
+  subject,
+  html
+) => {
   const mailOptions = {
     from: `"Your App" <${process.env.EMAIL_USER}>`,
     to,
@@ -21,5 +25,3 @@ const sendEmail = async (to, subject, html) => {
     `Email sent to ${to} with subject "${subject}"`
   );
 };
-
-module.exports = sendEmail;

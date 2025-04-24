@@ -10,24 +10,13 @@ import {
 
 export const register = async (req, res) => {
   try {
-    const {
-      username,
-      email,
-      password,
-      confirmPassword,
-      phone,
-    } = req.body;
-    const profileImage = req.file
-      ? req.file.path
-      : "";
+    const { username, email, password } =
+      req.body;
 
     const user = await registerUser({
       username,
       email,
       password,
-      confirmPassword,
-      phone,
-      profileImage,
     });
 
     await sendVerificationEmail(email);
@@ -74,23 +63,36 @@ export const createAdminHandler = async (
   }
 };
 
-
-export const forgotPassword = async (req, res) => {
+export const forgotPassword = async (
+  req,
+  res
+) => {
   try {
     await sendPasswordResetLink(req.body.email);
-    res.json({ message: 'Password reset link sent.' });
+    res.json({
+      message: "Password reset link sent.",
+    });
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res
+      .status(404)
+      .json({ message: err.message });
   }
 };
 
 export const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
   try {
-    await resetPasswordWithToken(token, newPassword);
-    res.json({ message: 'Password reset successfully.' });
+    await resetPasswordWithToken(
+      token,
+      newPassword
+    );
+    res.json({
+      message: "Password reset successfully.",
+    });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res
+      .status(400)
+      .json({ message: err.message });
   }
 };
 
@@ -99,8 +101,12 @@ export const verifyEmail = async (req, res) => {
 
   try {
     await verifyEmailWithToken(token);
-    res.json({ message: 'Email verified successfully.' });
+    res.json({
+      message: "Email verified successfully.",
+    });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res
+      .status(400)
+      .json({ message: err.message });
   }
 };

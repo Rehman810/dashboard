@@ -14,21 +14,7 @@ export const registerValidation = Joi.object({
     .messages({
       "string.pattern.base":
         "Password must have at least 8 characters, one uppercase, one lowercase, one number, and one special character.",
-    }),
-  confirmPassword: Joi.string()
-    .valid(Joi.ref("password"))
-    .required()
-    .messages({
-      "any.only": "Passwords must match.",
-    }),
-  phone: Joi.string()
-    .pattern(/^\d{10}$/)
-    .required()
-    .messages({
-      "string.pattern.base":
-        "Phone number must be exactly 10 digits.",
-    }),
-  profileImage: Joi.string().optional(),
+    })
 });
 
 export const loginValidation = Joi.object({
