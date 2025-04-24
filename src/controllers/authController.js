@@ -19,7 +19,7 @@ export const register = async (req, res) => {
       password,
     });
 
-    await sendVerificationEmail(email);
+    // await sendVerificationEmail(email);
 
     res.status(201).json({
       message: "User registered successfully",
